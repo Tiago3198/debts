@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import 'react-native-gesture-handler';
 import HomeScreen from './screens/HomeScreen';
 import DetailScreen from './screens/DetailScreen';
 
@@ -17,7 +18,7 @@ export default function App() {
         <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{ title: 'Detail' }}
+          options={{ title: 'Details of debt' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

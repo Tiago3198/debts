@@ -12,6 +12,12 @@ export function parseDebt(text) {
     else if (unit === 'mil' || unit === 'k') amount = num * 1000;
     else amount = num;
   }
+  
+  const MAX_AMOUNT = 1_000_000_000;
+
+  if (amount > MAX_AMOUNT) {
+    return { person: '', amount: 0, note: '', errors: ['amount_limit'] };
+  }
 
   // Step 2 — Remove amount from text
   const withoutAmount = normalized.replace(amountRegex, ' ');

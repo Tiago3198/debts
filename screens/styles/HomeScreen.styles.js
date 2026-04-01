@@ -76,4 +76,15 @@ noNote: {
   marginTop: 2,
   fontStyle: 'italic',
 },
+deleteAction: {
+  backgroundColor: '#ff3b30',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 80,
+  borderRadius: 12,
+  marginBottom: 10,
+},
+deleteActionText: {
+  fontSize: 24,
+},
 });

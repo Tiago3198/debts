@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Vibratio
 import { useState } from 'react';
 import { parseDebt } from '../utils/parseDebt';
 import styles from './styles/HomeScreen.styles';
+import SwipeableDebtCard from './components/SwipeableDebtCard';
 
 export default function HomeScreen({ navigation }) {
   const [input, setInput] = useState('');
@@ -14,7 +15,7 @@ export default function HomeScreen({ navigation }) {
     setWarning('');
 
     if (!input.trim()) {
-      setError('¿Cuánto te debo?.');
+      setError('We need at least a name and an amount. e.g. "Pedro 20 mil".');
       return;
     }
 
@@ -32,6 +33,10 @@ export default function HomeScreen({ navigation }) {
       setError("We couldn't detect an amount. e.g. \"Pedro 20 mil\"");
       return;
     }
+    if (errors.includes('amount_limit')) {
+      setError("The maximum amount allowed is $1,000,000,000.");
+      return;
+    }
 
     const newDebt = {
       id: Date.now().toString(),
@@ -41,6 +46,7 @@ export default function HomeScreen({ navigation }) {
       date: new Date().toLocaleDateString('en-US'),
     };
 
+
     setDebts([newDebt, ...debts]);
     setInput('');
     Vibration.vibrate(50);
@@ -49,10 +55,12 @@ export default function HomeScreen({ navigation }) {
       setWarning('Tip: adding a reason (e.g. "pizza") helps you remember later.');
     }
   };
-
+    const deleteDebt = (id) => {
+  setDebts(prev => prev.filter(d => d.id !== id));
+};
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Who owes you and how much?</Text>
+      <Text style={styles.title}>¿Cuánto te debo?</Text>
 
       <TextInput
         style={[styles.input, error ? styles.inputError : null]}
@@ -80,29 +88,20 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
 
-      <FlatList
-        data={debts}
-        keyExtractor={item => item.id}
-        style={styles.list}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => navigation.navigate('Detail', { debt: item })}
-          >
-            <View>
-              <Text style={styles.person}>{item.person}</Text>
-              {item.note
-                ? <Text style={styles.note}>{item.note}</Text>
-                : <Text style={styles.noNote}>No reason added</Text>
-              }
-            </View>
-            <View style={styles.right}>
-              <Text style={styles.amount}>${item.amount.toLocaleString('en-US')}</Text>
-              <Text style={styles.date}>{item.date}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+      
+
+<FlatList
+  data={debts}
+  keyExtractor={item => item.id}
+  style={styles.list}
+  renderItem={({ item }) => (
+    <SwipeableDebtCard
+      item={item}
+      onDelete={deleteDebt}
+      onPress={() => navigation.navigate('Detail', { debt: item })}
+    />
+  )}
+/>
     </View>
   );
 }
