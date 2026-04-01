@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
 import { useState } from 'react';
+import styles from './styles/HomeScreen.styles';
 
 function parseDebt(text) {
   const amountMatch = text.match(/(\d+\.?\d*)\s*k?/i);
@@ -73,58 +74,3 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: 80,
-    padding: 24,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 24,
-    textAlign: 'center',
-    color: '#111',
-  },
-  input: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    color: '#111',
-    marginBottom: 16,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#111',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  list: { width: '100%' },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: '#f5f5f5',
-    marginBottom: 10,
-  },
-  person: { fontSize: 16, fontWeight: '600', color: '#111' },
-  note: { fontSize: 13, color: '#666', marginTop: 2 },
-  amount: { fontSize: 16, fontWeight: '700', color: '#111', textAlign: 'right' },
-  date: { fontSize: 12, color: '#999', textAlign: 'right', marginTop: 2 },
-  right: { alignItems: 'flex-end' },
-});
