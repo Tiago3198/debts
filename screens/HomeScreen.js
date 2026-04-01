@@ -1,27 +1,38 @@
-import { Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
 import { useState } from 'react';
+import { parseDebt } from '../utils/parseDebt';
 import styles from './styles/HomeScreen.styles';
-
-function parseDebt(text) {
-  const amountMatch = text.match(/(\d+\.?\d*)\s*k?/i);
-  const isK = text.match(/\d+k/i);
-  let amount = amountMatch ? parseFloat(amountMatch[1]) : 0;
-  if (isK) amount *= 1000;
-
-  const words = text.split(' ').filter(w => !w.match(/\d/) && w.length > 1);
-  const person = words[0] || 'Unknown';
-  const note = words.slice(1).join(' ') || '';
-
-  return { person, amount, note };
-}
 
 export default function HomeScreen({ navigation }) {
   const [input, setInput] = useState('');
   const [debts, setDebts] = useState([]);
+  const [error, setError] = useState('');
+  const [warning, setWarning] = useState('');
 
   const save = () => {
-    if (!input.trim()) return;
-    const { person, amount, note } = parseDebt(input);
+    setError('');
+    setWarning('');
+
+    if (!input.trim()) {
+      setError('¿Cuánto te debo?.');
+      return;
+    }
+
+    const { person, amount, note, errors } = parseDebt(input);
+
+    if (errors.includes('person') && errors.includes('amount')) {
+      setError('We need at least a name and an amount. e.g. "Pedro 20 mil"');
+      return;
+    }
+    if (errors.includes('person')) {
+      setError("We couldn't detect a name. e.g. \"Pedro 20 mil\"");
+      return;
+    }
+    if (errors.includes('amount')) {
+      setError("We couldn't detect an amount. e.g. \"Pedro 20 mil\"");
+      return;
+    }
+
     const newDebt = {
       id: Date.now().toString(),
       person: person.charAt(0).toUpperCase() + person.slice(1),
@@ -29,9 +40,14 @@ export default function HomeScreen({ navigation }) {
       note,
       date: new Date().toLocaleDateString('en-US'),
     };
+
     setDebts([newDebt, ...debts]);
     setInput('');
     Vibration.vibrate(50);
+
+    if (!note) {
+      setWarning('Tip: adding a reason (e.g. "pizza") helps you remember later.');
+    }
   };
 
   return (
@@ -39,13 +55,26 @@ export default function HomeScreen({ navigation }) {
       <Text style={styles.title}>Who owes you and how much?</Text>
 
       <TextInput
-        style={styles.input}
-        placeholder="e.g. john 20k pizza"
+        style={[styles.input, error ? styles.inputError : null]}
+        placeholder="e.g. Pedro 20 mil"
         placeholderTextColor="#999"
         value={input}
-        onChangeText={setInput}
+        onChangeText={(text) => {
+          const clean = text.replace(/[.']/g, '');
+          setInput(clean);
+          setError('');
+          setWarning('');
+        }}
         autoFocus
       />
+
+      {error ? (
+        <Text style={styles.errorText}>⚠️ {error}</Text>
+      ) : null}
+
+      {warning ? (
+        <Text style={styles.warningText}>💡 {warning}</Text>
+      ) : null}
 
       <TouchableOpacity style={styles.button} onPress={save}>
         <Text style={styles.buttonText}>Save</Text>
@@ -62,7 +91,10 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.person}>{item.person}</Text>
-              {item.note ? <Text style={styles.note}>{item.note}</Text> : null}
+              {item.note
+                ? <Text style={styles.note}>{item.note}</Text>
+                : <Text style={styles.noNote}>No reason added</Text>
+              }
             </View>
             <View style={styles.right}>
               <Text style={styles.amount}>${item.amount.toLocaleString('en-US')}</Text>

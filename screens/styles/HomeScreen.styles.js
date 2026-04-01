@@ -53,4 +53,27 @@ export default StyleSheet.create({
   amount: { fontSize: 16, fontWeight: '700', color: '#111', textAlign: 'right' },
   date: { fontSize: 12, color: '#999', textAlign: 'right', marginTop: 2 },
   right: { alignItems: 'flex-end' },
+  inputError: {
+  borderColor: '#ff3b30',
+},
+errorText: {
+  width: '100%',
+  color: '#ff3b30',
+  fontSize: 13,
+  marginBottom: 8,
+  marginTop: -8,
+},
+warningText: {
+  width: '100%',
+  color: '#ff9500',
+  fontSize: 13,
+  marginBottom: 8,
+  marginTop: -8,
+},
+noNote: {
+  fontSize: 13,
+  color: '#bbb',
+  marginTop: 2,
+  fontStyle: 'italic',
+},
 });

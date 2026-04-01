@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
 import styles from './styles/DetailScreen.styles';
 
 export default function DetailScreen({ route }) {
