@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Animated, Alert } from 'react-native';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import styles from '../styles/HomeScreen.styles';
 
-export default function SwipeableDebtCard({ item, onPress, onDelete }) {
+export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
   const swipeRef = useRef(null);
 
   const handleDelete = () => {
@@ -60,6 +60,9 @@ export default function SwipeableDebtCard({ item, onPress, onDelete }) {
           <View style={styles.right}>
             <Text style={styles.amount}>${item.amount.toLocaleString('en-US')}</Text>
             <Text style={styles.date}>{item.date}</Text>
+            <TouchableOpacity onPress={() => onEdit(item)} style={styles.editIcon}>
+              <Text style={styles.editIconText}>✏️</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Swipeable>

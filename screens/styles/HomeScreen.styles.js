@@ -87,4 +87,11 @@ deleteAction: {
 deleteActionText: {
   fontSize: 24,
 },
+editIcon: {
+  marginTop: 6,
+  alignSelf: 'flex-end',
+},
+editIconText: {
+  fontSize: 16,
+},
 });

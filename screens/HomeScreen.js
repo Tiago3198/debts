@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
 import { useState } from 'react';
 import { parseDebt } from '../utils/parseDebt';
 import styles from './styles/HomeScreen.styles';
@@ -10,12 +10,13 @@ export default function HomeScreen({ navigation }) {
   const [error, setError] = useState('');
   const [warning, setWarning] = useState('');
 
+
   const save = () => {
     setError('');
     setWarning('');
 
     if (!input.trim()) {
-      setError('We need at least a name and an amount. e.g. "Pedro 20 mil".');
+      setError('We need at least a name and an amount. e.g. "Pedro 20 mil"');
       return;
     }
 
@@ -56,7 +57,10 @@ export default function HomeScreen({ navigation }) {
     }
   };
     const deleteDebt = (id) => {
-  setDebts(prev => prev.filter(d => d.id !== id));
+    setDebts(prev => prev.filter(d => d.id !== id));
+};
+    const updateDebt = (updatedDebt) => {
+    setDebts(prev => prev.map(d => d.id === updatedDebt.id ? updatedDebt : d));
 };
   return (
     <View style={styles.container}>
@@ -98,7 +102,9 @@ export default function HomeScreen({ navigation }) {
     <SwipeableDebtCard
       item={item}
       onDelete={deleteDebt}
+      onEdit={(debt) => navigation.navigate('Edit', { debt, onUpdate: updateDebt })}
       onPress={() => navigation.navigate('Detail', { debt: item })}
+
     />
   )}
 />

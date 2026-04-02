@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import HomeScreen from './screens/HomeScreen';
 import DetailScreen from './screens/DetailScreen';
+import EditScreen from './screens/EditScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
           component={DetailScreen}
           options={{ title: 'Details of debt' }}
         />
+        <Stack.Screen name="Edit" component={EditScreen} options={{ title: 'Edit Debt' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
