@@ -1,8 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity, Vibration } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Vibration, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { parseDebt } from '../utils/parseDebt';
+import styles from './styles/EditScreen.styles';
 import { setPendingUpdate } from '../utils/pendingUpdate';
-import styles from './styles/HomeScreen.styles';
+import { Feather } from '@expo/vector-icons';
 
 export default function EditScreen({ route, navigation }) {
   const { debt } = route.params;
@@ -49,7 +50,8 @@ export default function EditScreen({ route, navigation }) {
       amount,
       note,
     });
-    Vibration.vibrate(25);
+
+    Vibration.vibrate(50);
     navigation.popToTop();
   };
 
@@ -57,23 +59,24 @@ export default function EditScreen({ route, navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Edit debt</Text>
 
-      <TextInput
-        style={[styles.input, error ? styles.inputError : null]}
-        placeholder="e.g. john 20k pizza"
-        placeholderTextColor="#999"
-        value={input}
-        onChangeText={(text) => {
-          setInput(text.replace(/[.']/g, ''));
-          setError('');
-        }}
-        autoFocus
-      />
+      <View style={styles.inputRow}>
+        <TextInput
+          style={[styles.input, error ? styles.inputError : null]}
+          placeholder="e.g. Pedro 20 mil pizza"
+          placeholderTextColor="#aaa"
+          value={input}
+          onChangeText={(text) => {
+            setInput(text.replace(/[.']/g, ''));
+            setError('');
+          }}
+          autoFocus
+        />
+        <TouchableOpacity style={styles.saveButton} onPress={save}>
+          <Feather name="check" size={22} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
       {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
-
-      <TouchableOpacity style={styles.button} onPress={save}>
-        <Text style={styles.buttonText}>Update</Text>
-      </TouchableOpacity>
     </View>
   );
 }

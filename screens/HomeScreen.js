@@ -4,6 +4,7 @@ import { parseDebt } from '../utils/parseDebt';
 import styles from './styles/HomeScreen.styles';
 import SwipeableDebtCard from './components/SwipeableDebtCard';
 import { getPendingUpdate } from '../utils/pendingUpdate';
+import { Feather } from '@expo/vector-icons';
 
 export default function HomeScreen({ navigation, route }) {
   const [input, setInput] = useState('');
@@ -98,30 +99,28 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
 
-      {/* Parte fija arriba */}
       <View style={styles.header}>
         <Text style={styles.title}>¿Cuánto te debo?</Text>
-
-        <TextInput
-          style={[styles.input, error ? styles.inputError : null]}
-          placeholder="e.g. Pedro 20 mil"
-          placeholderTextColor="#999"
-          value={input}
-          onChangeText={(text) => {
-            const clean = text.replace(/[.']/g, '');
-            setInput(clean);
-            setError('');
-            setWarning('');
-          }}
-          autoFocus
-        />
+        <View style={styles.inputRow}>
+          <TextInput
+            style={[styles.input, error ? styles.inputError : null]}
+            placeholder="e.g. Pedro 20 mil pizza"
+            placeholderTextColor="#aaa"
+            value={input}
+            onChangeText={(text) => {
+              const clean = text.replace(/[.']/g, '');
+              setInput(clean);
+              setError('');
+              setWarning('');
+            }}
+          />
+          <TouchableOpacity style={styles.saveButton} onPress={save}>
+            <Feather name="plus" size={22} color="#fff" />
+          </TouchableOpacity>
+        </View>
 
         {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
         {warning ? <Text style={styles.warningText}>💡 {warning}</Text> : null}
-
-        <TouchableOpacity style={styles.button} onPress={save}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
 
         {Object.keys(peopleGroups).length > 0 && (
           <ScrollView
@@ -154,11 +153,18 @@ export default function HomeScreen({ navigation, route }) {
         )}
       </View>
 
-      {/* Lista scrollable */}
       <FlatList
         data={filteredDebts}
         keyExtractor={item => item.id}
         style={styles.list}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Feather name="inbox" size={40} color="#ddd" />
+            <Text style={styles.emptyText}>No debts yet</Text>
+            <Text style={styles.emptySubtext}>Type above to add your first one</Text>
+          </View>
+        }
         renderItem={({ item }) => (
           <SwipeableDebtCard
             item={item}
@@ -169,10 +175,9 @@ export default function HomeScreen({ navigation, route }) {
         )}
       />
 
-      {/* Total fijo abajo */}
       {debts.length > 0 && (
         <View style={styles.totalContainer}>
-          <Text style={styles.totalLabel}>Total debido</Text>
+          <Text style={styles.totalLabel}>Total</Text>
           <Text style={styles.totalAmount}>${total.toLocaleString('en-US')}</Text>
         </View>
       )}

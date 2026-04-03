@@ -78,7 +78,7 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
         overshootLeft={false}
       >
         <TouchableOpacity style={styles.card} onPress={onPress}>
-          <View>
+          <View style={styles.cardBody}>
             <Text style={styles.person}>{item.person}</Text>
             {item.note
               ? <Text style={styles.note}>{item.note}</Text>
