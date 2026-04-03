@@ -1,15 +1,23 @@
 import { Text, View, TextInput, TouchableOpacity, FlatList, Vibration } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseDebt } from '../utils/parseDebt';
 import styles from './styles/HomeScreen.styles';
 import SwipeableDebtCard from './components/SwipeableDebtCard';
+import { getPendingUpdate } from '../utils/pendingUpdate';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const [input, setInput] = useState('');
   const [debts, setDebts] = useState([]);
   const [error, setError] = useState('');
   const [warning, setWarning] = useState('');
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      const updated = getPendingUpdate();
+      if (updated) updateDebt(updated);
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const save = () => {
     setError('');
@@ -27,15 +35,15 @@ export default function HomeScreen({ navigation }) {
       return;
     }
     if (errors.includes('person')) {
-      setError("We couldn't detect a name. e.g. \"Pedro 20 mil\"");
+      setError('We couldn\'t detect a name. e.g. "Pedro 20 mil"');
       return;
     }
     if (errors.includes('amount')) {
-      setError("We couldn't detect an amount. e.g. \"Pedro 20 mil\"");
+      setError('We couldn\'t detect an amount. e.g. "Pedro 20 mil"');
       return;
     }
     if (errors.includes('amount_limit')) {
-      setError("The maximum amount allowed is $1,000,000,000.");
+      setError('The maximum amount allowed is $1,000,000,000.');
       return;
     }
 
@@ -47,21 +55,23 @@ export default function HomeScreen({ navigation }) {
       date: new Date().toLocaleDateString('en-US'),
     };
 
-
     setDebts([newDebt, ...debts]);
     setInput('');
-    Vibration.vibrate(50);
+    Vibration.vibrate(25);
 
     if (!note) {
       setWarning('Tip: adding a reason (e.g. "pizza") helps you remember later.');
     }
   };
+
   const deleteDebt = (id) => {
     setDebts(prev => prev.filter(d => d.id !== id));
   };
+
   const updateDebt = (updatedDebt) => {
     setDebts(prev => prev.map(d => d.id === updatedDebt.id ? updatedDebt : d));
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>¿Cuánto te debo?</Text>
@@ -100,9 +110,8 @@ export default function HomeScreen({ navigation }) {
           <SwipeableDebtCard
             item={item}
             onDelete={deleteDebt}
-            onEdit={(debt) => navigation.navigate('Edit', { debt, onUpdate: updateDebt })}
+            onEdit={(debt) => navigation.navigate('Edit', { debt })}
             onPress={() => navigation.navigate('Detail', { debt: item })}
-
           />
         )}
       />

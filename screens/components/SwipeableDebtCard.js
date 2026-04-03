@@ -52,7 +52,13 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
     });
 
     return (
-      <TouchableOpacity style={styles.editAction} onPress={() => onEdit(item)}>
+      <TouchableOpacity
+        style={styles.editAction}
+        onPress={() => {
+          swipeRef.current?.close();
+          onEdit(item);
+        }}
+      >
         <Animated.View style={{ transform: [{ scale }] }}>
           <Feather name="edit-2" size={22} color="#fff" />
         </Animated.View>

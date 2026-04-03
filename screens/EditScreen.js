@@ -1,10 +1,11 @@
 import { View, Text, TextInput, TouchableOpacity, Vibration } from 'react-native';
 import { useState } from 'react';
 import { parseDebt } from '../utils/parseDebt';
+import { setPendingUpdate } from '../utils/pendingUpdate';
 import styles from './styles/HomeScreen.styles';
 
 export default function EditScreen({ route, navigation }) {
-  const { debt, onUpdate } = route.params;
+  const { debt } = route.params;
   const [input, setInput] = useState(
     `${debt.person} ${debt.amount} ${debt.note}`.trim()
   );
@@ -42,15 +43,14 @@ export default function EditScreen({ route, navigation }) {
       return;
     }
 
-    onUpdate({
+    setPendingUpdate({
       ...debt,
       person: person.charAt(0).toUpperCase() + person.slice(1),
       amount,
       note,
     });
-
-    Vibration.vibrate(50);
-    navigation.goBack();
+    Vibration.vibrate(25);
+    navigation.popToTop();
   };
 
   return (
