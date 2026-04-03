@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, Alert } from 'react-native';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import styles from '../styles/HomeScreen.styles';
+import { Feather } from '@expo/vector-icons';
 
 export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
   const swipeRef = useRef(null);
@@ -25,6 +26,7 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
     );
   };
 
+  // Render the delete action when swiping left
   const renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-80, 0],
@@ -34,9 +36,26 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
 
     return (
       <TouchableOpacity style={styles.deleteAction} onPress={handleDelete}>
-        <Animated.Text style={[styles.deleteActionText, { transform: [{ scale }] }]}>
-          🗑️
-        </Animated.Text>
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <Feather name="trash-2" size={22} color="#fff" />
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  };
+
+  // Render the edit action when swiping right
+  const renderLeftActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [0, 80],
+      outputRange: [0.5, 1],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <TouchableOpacity style={styles.editAction} onPress={() => onEdit(item)}>
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <Feather name="edit-2" size={22} color="#fff" />
+        </Animated.View>
       </TouchableOpacity>
     );
   };
@@ -46,8 +65,11 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
       <Swipeable
         ref={swipeRef}
         renderRightActions={renderRightActions}
+        renderLeftActions={renderLeftActions}
         rightThreshold={40}
+        leftThreshold={40}
         overshootRight={false}
+        overshootLeft={false}
       >
         <TouchableOpacity style={styles.card} onPress={onPress}>
           <View>
@@ -60,12 +82,11 @@ export default function SwipeableDebtCard({ item, onPress, onDelete, onEdit }) {
           <View style={styles.right}>
             <Text style={styles.amount}>${item.amount.toLocaleString('en-US')}</Text>
             <Text style={styles.date}>{item.date}</Text>
-            <TouchableOpacity onPress={() => onEdit(item)} style={styles.editIcon}>
-              <Text style={styles.editIconText}>✏️</Text>
-            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Swipeable>
     </GestureHandlerRootView>
   );
+
+
 }

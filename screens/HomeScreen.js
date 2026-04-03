@@ -56,12 +56,12 @@ export default function HomeScreen({ navigation }) {
       setWarning('Tip: adding a reason (e.g. "pizza") helps you remember later.');
     }
   };
-    const deleteDebt = (id) => {
+  const deleteDebt = (id) => {
     setDebts(prev => prev.filter(d => d.id !== id));
-};
-    const updateDebt = (updatedDebt) => {
+  };
+  const updateDebt = (updatedDebt) => {
     setDebts(prev => prev.map(d => d.id === updatedDebt.id ? updatedDebt : d));
-};
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>¿Cuánto te debo?</Text>
@@ -92,22 +92,20 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
 
-      
+      <FlatList
+        data={debts}
+        keyExtractor={item => item.id}
+        style={styles.list}
+        renderItem={({ item }) => (
+          <SwipeableDebtCard
+            item={item}
+            onDelete={deleteDebt}
+            onEdit={(debt) => navigation.navigate('Edit', { debt, onUpdate: updateDebt })}
+            onPress={() => navigation.navigate('Detail', { debt: item })}
 
-<FlatList
-  data={debts}
-  keyExtractor={item => item.id}
-  style={styles.list}
-  renderItem={({ item }) => (
-    <SwipeableDebtCard
-      item={item}
-      onDelete={deleteDebt}
-      onEdit={(debt) => navigation.navigate('Edit', { debt, onUpdate: updateDebt })}
-      onPress={() => navigation.navigate('Detail', { debt: item })}
-
-    />
-  )}
-/>
+          />
+        )}
+      />
     </View>
   );
 }

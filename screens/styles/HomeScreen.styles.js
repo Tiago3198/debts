@@ -94,4 +94,15 @@ editIcon: {
 editIconText: {
   fontSize: 16,
 },
+editAction: {
+  backgroundColor: '#007AFF',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 80,
+  borderRadius: 12,
+  marginBottom: 10,
+},
+editActionText: {
+  fontSize: 24,
+},
 });
