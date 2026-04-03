@@ -72,6 +72,8 @@ export default function HomeScreen({ navigation, route }) {
     setDebts(prev => prev.map(d => d.id === updatedDebt.id ? updatedDebt : d));
   };
 
+  const total = debts.reduce((sum, d) => sum + d.amount, 0);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>¿Cuánto te debo?</Text>
@@ -115,6 +117,13 @@ export default function HomeScreen({ navigation, route }) {
           />
         )}
       />
+
+            {debts.length > 0 && (
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalLabel}>Total debido</Text>
+          <Text style={styles.totalAmount}>${total.toLocaleString('en-US')}</Text>
+        </View>
+      )}
     </View>
   );
 }

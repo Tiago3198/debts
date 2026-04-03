@@ -105,4 +105,25 @@ editAction: {
 editActionText: {
   fontSize: 24,
 },
+totalContainer: {
+  width: '100%',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingVertical: 12,
+  paddingHorizontal: 4,
+  marginBottom: 8,
+  borderTopWidth: 1,
+  borderTopColor: '#eee',
+},
+totalLabel: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#666',
+},
+totalAmount: {
+  fontSize: 20,
+  fontWeight: '800',
+  color: '#111',
+},
 });
